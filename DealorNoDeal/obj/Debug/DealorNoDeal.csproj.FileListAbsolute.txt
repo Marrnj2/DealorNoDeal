@@ -1,0 +1,14 @@
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\bin\Debug\DealorNoDeal.exe.config
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\bin\Debug\DealorNoDeal.exe
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\bin\Debug\DealorNoDeal.pdb
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.csprojAssemblyReference.cache
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.csproj.CoreCompileInputs.cache
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.exe
+C:\Users\Olas\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.pdb
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\bin\Debug\DealorNoDeal.exe.config
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\bin\Debug\DealorNoDeal.exe
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\bin\Debug\DealorNoDeal.pdb
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.csproj.CoreCompileInputs.cache
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.exe
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.pdb
+H:\visualstudio\source\repos\DealorNoDeal\DealorNoDeal\obj\Debug\DealorNoDeal.csprojAssemblyReference.cache
