@@ -197,7 +197,6 @@ namespace DealorNoDeal
             int num;
             //----------------------
 
-            Console.WriteLine("NumGen Test");
             for (int i = 0; i < numList.Length; i++)
             {
                 num = rand.Next(0, numList.Length);
@@ -215,7 +214,6 @@ namespace DealorNoDeal
         public static void CaseSort(ref int[] cases)
         {
             // Variable declarations 
-            Console.WriteLine("CaseSirt Test");
             int[] money = new int[26];
             int[] numList = new int[26];
             //----------------------
@@ -255,19 +253,42 @@ namespace DealorNoDeal
                 cases[i] = money[numList[i]];
             }
         }
+
+        public static void OfferMaker(int[] cases, int turns, int offer)
+        {
+            int sum = 0;
+
+            for(int i = 0; i < cases.Length; i++)
+            {
+                sum += cases[i];
+            }
+            sum = sum * turns / 10;
+            offer = sum;
+        }
+
         public static void GameStart(Finalists[] finalist)
         {
             // Variable declarations 
-            Console.WriteLine("Test");
             Random rand = new Random();
             int[] cases = new int[26];
             int num;
+            //----------------------
+            //Temp
+            int pick;
+            int[] openedCase = new int[26];
+            int playerCase;
+            int call = 7;
+            int turns = 0;
+            string choice = " ";
+            int offer = 0;
+            string[] moneyDisplay = new string[26];
+            string[] casesDisplay = new string[26];
+            
             //----------------------
 
             CaseSort(ref cases);
 
 
-            Console.WriteLine("Test 2");
             num = rand.Next(0, 10);
             Console.WriteLine("The player tonight is!");
             Console.WriteLine();
@@ -278,6 +299,43 @@ namespace DealorNoDeal
             Console.WriteLine("Press Enter to start");
             Console.ReadKey();
             Console.Clear();
+            Console.WriteLine("Pick your case!");
+            pick = Convert.ToInt32(Console.ReadLine());
+            playerCase = cases[pick];
+            cases[pick] = 0;
+            while (turns < cases.Length || choice != "NO DEAL")
+            {
+                for (int i = 0; i < moneyDisplay.Length - 1; i++)
+                {
+                    Console.WriteLine();
+                }
+
+                Console.WriteLine("Now pick a case to open");
+                pick = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine($"Case {pick} had ${cases[pick]} inside!");
+                turns++;
+                if (turns == call)
+                {
+                    OfferMaker(cases, turns, offer);
+                    Console.WriteLine($"The banker is offering you {offer}. Deal or No Deal?");
+                    choice = Console.ReadLine().ToUpper();
+                    call--;
+                }
+            }
+            if(choice == "DEAL")
+            {
+                Console.WriteLine($"Congratulations you win {offer}. You had {playerCase} inside your case");
+                if(offer < playerCase)
+                {
+                    Console.WriteLine("Oh well better luck next time");
+                }
+            }
+            if(turns == 26)
+            {
+                Console.WriteLine($"Your case has {playerCase}");
+            }
+            Console.ReadKey();
+
 
             
         }
