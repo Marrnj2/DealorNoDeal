@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Threading;
 
 namespace DealorNoDeal
 {
@@ -169,7 +170,8 @@ namespace DealorNoDeal
         {
             // Variable declarations 
             int[] numList = new int[10];
-            NumGen(ref numList);
+            int arraySize = 10;
+            NumGen(ref numList, arraySize);
             //----------------------
 
             Console.WriteLine("Your finalists are!");
@@ -190,7 +192,7 @@ namespace DealorNoDeal
             Console.Clear();
         }
 
-        public static void NumGen(ref int[] numList)
+        public static void NumGen(ref int[] numList, int arraySize)
         {
             // Variable declarations 
             Random rand = new Random();
@@ -199,16 +201,17 @@ namespace DealorNoDeal
 
             for (int i = 0; i < numList.Length; i++)
             {
-                num = rand.Next(0, numList.Length);
+                num = rand.Next(0, arraySize);
                 for (int j = 0; j < i; j++)
                 {
                     while (num == numList[j])
                     {
-                        num = rand.Next(0, numList.Length);
+                        num = rand.Next(0, arraySize);
                         j = 0;
                     }
                 }
                 numList[i] = num;
+
             }
         }
         public static void CaseSort(ref int[] cases)
@@ -216,9 +219,10 @@ namespace DealorNoDeal
             // Variable declarations 
             int[] money = new int[26];
             int[] numList = new int[26];
+            int arraySize = 26;
             //----------------------
 
-            NumGen(ref numList);
+            NumGen(ref numList, arraySize);
 
             money[0] = 1;
             money[1] = 5;
@@ -254,16 +258,23 @@ namespace DealorNoDeal
             }
         }
 
-        public static void OfferMaker(int[] cases, int turns, int offer)
+        public static int OfferMaker(int[] cases, int turns)
         {
             int sum = 0;
+            int entrys = 0;
 
             for(int i = 0; i < cases.Length; i++)
             {
-                sum += cases[i];
+                if (cases[i] > 0)
+                {
+                    sum += cases[i];
+                    entrys++;
+                }
             }
+            sum = sum / entrys;
             sum = sum * turns / 10;
-            offer = sum;
+            return sum;
+           
         }
 
         public static void GameStart(Finalists[] finalist)
@@ -283,9 +294,9 @@ namespace DealorNoDeal
             int offer = 0;
             string[] moneyDisplay = new string[26];
             string[] casesDisplay = new string[26];
-            
-            //----------------------
 
+            //----------------------
+            Console.WriteLine("Test");
             CaseSort(ref cases);
 
 
@@ -303,21 +314,26 @@ namespace DealorNoDeal
             pick = Convert.ToInt32(Console.ReadLine());
             playerCase = cases[pick];
             cases[pick] = 0;
-            while (turns < cases.Length || choice != "NO DEAL")
+            while (turns < cases.Length || choice != "DEAL")
             {
-                for (int i = 0; i < moneyDisplay.Length - 1; i++)
-                {
-                    Console.WriteLine();
-                }
-
                 Console.WriteLine("Now pick a case to open");
                 pick = Convert.ToInt32(Console.ReadLine());
+                Console.Clear();
                 Console.WriteLine($"Case {pick} had ${cases[pick]} inside!");
                 turns++;
+
+
+
+
+
+
+
+
+
                 if (turns == call)
                 {
-                    OfferMaker(cases, turns, offer);
-                    Console.WriteLine($"The banker is offering you {offer}. Deal or No Deal?");
+                    offer = OfferMaker(cases, turns);
+                    Console.WriteLine($"The banker is offering you ${offer}. Deal or No Deal?");
                     choice = Console.ReadLine().ToUpper();
                     call--;
                 }
@@ -336,8 +352,12 @@ namespace DealorNoDeal
             }
             Console.ReadKey();
 
-
             
+            
+        }
+        public static void Display()
+        {
+
         }
     }
 }
