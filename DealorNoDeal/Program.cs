@@ -27,6 +27,7 @@ namespace DealorNoDeal
         }
         public struct Cases
         {
+            public int caseNumber;
             public int caseValue;
             public bool opened;
         }
@@ -242,7 +243,7 @@ namespace DealorNoDeal
             int[] money = new int[26];
             int[] numList = new int[26];
             int arraySize = 26;
-            
+            int caseNum = 1;
             //----------------------
 
             // Calls NumGen array for array of random numbers
@@ -280,7 +281,9 @@ namespace DealorNoDeal
             // Assigns cases with their money values
             for (int i = 0; i < numList.Length; i++)
             {
+                cases[i].caseNumber = caseNum;
                 cases[i].caseValue = money[numList[i]];
+                caseNum++;
             }
         }
         // Method for creating the bankers offer
@@ -343,7 +346,8 @@ namespace DealorNoDeal
             cases[pick].opened = true;
             do
             {
-                //Display(cases);
+                Console.Clear();
+                Display(cases);
                 Console.WriteLine("Now pick a case to open");
                 pick = Convert.ToInt32(Console.ReadLine());
                 pick--;
@@ -354,11 +358,13 @@ namespace DealorNoDeal
                     {
                         Console.WriteLine("You already picked this case try another one!");
                         pick = Convert.ToInt32(Console.ReadLine());
+                        pick--;
                     }
                 }
                 Console.Clear();
                 Console.WriteLine($"Case {pick + 1} had ${cases[pick].caseValue} inside!");
                 cases[pick].opened = true;
+                Thread.Sleep(2000);
                 turns++;
                 counter++;
 
@@ -373,7 +379,10 @@ namespace DealorNoDeal
                     Console.WriteLine($"The banker is offering you ${offer}. Deal or No Deal?");
                     choice = Console.ReadLine().ToUpper();
                     counter = 0;
-                    call--;
+                    if (call > 2)
+                    {
+                        call--;
+                    }
                 }
             } while (turns <= cases.Length - 1 && choice != "DEAL");
             {
@@ -381,7 +390,7 @@ namespace DealorNoDeal
             }
             if (choice == "DEAL")
             {
-                Console.WriteLine($"Congratulations you win {offer}. You had {playerCase} inside your case");
+                Console.WriteLine($"Congratulations you win {offer}. You had {playerCase.caseValue} inside your case");
                 if (offer < playerCase.caseValue)
                 {
                     Console.WriteLine("Oh well better luck next time");
@@ -398,12 +407,55 @@ namespace DealorNoDeal
         }
         public static void Display(Cases[] cases)
         {
+            int count = 0;
+            string[] money = new string[26];
+            money[0] = "1";
+            money[1] = "2";
+            money[2] = "5";
+            money[3] = "10";
+            money[4] = "20";
+            money[5] = "50";
+            money[6] = "100";
+            money[7] = "150";
+            money[8] = "200";
+            money[9] = "250";
+            money[10] = "300";
+            money[11] = "500";
+            money[12] = "750";
+            money[13] = "1000";
+            money[14] = "2000";
+            money[15] = "3000";
+            money[16] = "4000";
+            money[17] = "5000";
+            money[18] = "15000";
+            money[19] = "20000";
+            money[20] = "30000";
+            money[21] = "50000";
+            money[22] = "75000";
+            money[23] = "100000";
+            money[24] = "200000";
+            money[25] = "1000000";
+
+        for(int i = 0; i < 26; i++)
+            {
+                for(int j = 0; j < 2; j++)
+                {
+                    Console.WriteLine(money[count]);
+                }
+            }
+
+            Console.WriteLine("Avalible cases");
+            Console.WriteLine();
             for (int i = 0; i < cases.Length; i++)
             {
-                Console.WriteLine("Avalible cases");
-                Console.WriteLine();
-                Console.Write($"{cases}  ");
+                
+                if (cases[i].opened == false)
+                {
+                    Console.Write($"{cases[i].caseNumber}  ");
+                }
             }
+            Console.WriteLine();
+
         }
     }
 }
