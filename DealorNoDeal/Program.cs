@@ -343,7 +343,6 @@ namespace DealorNoDeal
             pick = Convert.ToInt32(Console.ReadLine());
             pick--;
             playerCase = cases[pick];
-            cases[pick].opened = true;
             do
             {
                 Console.Clear();
@@ -409,6 +408,8 @@ namespace DealorNoDeal
         {
             int count = 0;
             string[] money = new string[26];
+            Cases[] sortedCases = new Cases[26];
+            Array.Copy(cases, sortedCases,26);
             money[0] = "1";
             money[1] = "2";
             money[2] = "5";
@@ -436,12 +437,47 @@ namespace DealorNoDeal
             money[24] = "200000";
             money[25] = "1000000";
 
-        for(int i = 0; i < 26; i++)
+            int n = sortedCases.Length;
+            for (int i = 1; i < n; ++i)
             {
-                for(int j = 0; j < 2; j++)
+                Cases key = sortedCases[i];
+                int j = i - 1;
+
+                // Move elements of arr[0..i-1], 
+                // that are greater than key,  
+                // to one position ahead of 
+                // their current position 
+                while (j >= 0 && sortedCases[j].caseValue > key.caseValue)
                 {
-                    Console.WriteLine(money[count]);
+                    sortedCases[j + 1] = sortedCases[j];
+                    j = j - 1;
                 }
+                sortedCases[j + 1] = key;
+            }
+
+            while (count < money.Length / 2)
+            {
+                if (sortedCases[count].opened == true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                Console.Write(money[count] + "\t\t");
+                if (sortedCases[count + (money.Length / 2) - 1].opened == true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                
+                Console.Write(money[count + (money.Length / 2) -1]+"\n");
+                count++;
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
             Console.WriteLine("Avalible cases");
@@ -452,6 +488,8 @@ namespace DealorNoDeal
                 if (cases[i].opened == false)
                 {
                     Console.Write($"{cases[i].caseNumber}  ");
+                    
+                    
                 }
             }
             Console.WriteLine();
