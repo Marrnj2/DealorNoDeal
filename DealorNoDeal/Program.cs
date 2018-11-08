@@ -27,6 +27,7 @@ namespace DealorNoDeal
         }
         public struct Cases
         {
+            public bool playerCase;
             public int caseNumber;
             public int caseValue;
             public bool opened;
@@ -318,13 +319,14 @@ namespace DealorNoDeal
             //----------------------
             //Temp
             int pick;
-            int[] openedCase = new int[26];
-            Cases playerCase;
-            int call = 7;
+            int playerCaseNumber;
+            int call = 6;
             int counter = 0;
             int turns = 0;
             string choice = " ";
             int offer = 0;
+            int temp = 0;
+            string swap = " ";
             //----------------------
             CaseSort(cases, moneyPosition);
 
@@ -342,18 +344,22 @@ namespace DealorNoDeal
             Console.WriteLine("Pick your case!");
             pick = Convert.ToInt32(Console.ReadLine());
             pick--;
-            playerCase = cases[pick];
-            do
+            cases[pick].playerCase = true;
+            playerCaseNumber = pick;
+
+            while (turns < 24)
             {
                 Console.Clear();
                 Display(cases);
                 Console.WriteLine("Now pick a case to open");
+                Console.WriteLine(turns);
+
                 pick = Convert.ToInt32(Console.ReadLine());
                 pick--;
-                if (cases[pick].opened == true)
+                if (cases[pick].opened == true || cases[pick].playerCase == true)
                 {
-
-                    while (cases[pick].opened == true)
+                    
+                    while (cases[pick].opened == true || cases[pick].playerCase == true)
                     {
                         Console.WriteLine("You already picked this case try another one!");
                         pick = Convert.ToInt32(Console.ReadLine());
@@ -361,17 +367,13 @@ namespace DealorNoDeal
                     }
                 }
                 Console.Clear();
+
+                Display(cases);
                 Console.WriteLine($"Case {pick + 1} had ${cases[pick].caseValue} inside!");
+                
                 cases[pick].opened = true;
-                Thread.Sleep(2000);
                 turns++;
                 counter++;
-
-
-
-
-
-
                 if (counter == call)
                 {
                     offer = OfferMaker(cases, turns);
@@ -382,24 +384,47 @@ namespace DealorNoDeal
                     {
                         call--;
                     }
+                    
                 }
-            } while (turns <= cases.Length - 1 && choice != "DEAL");
+            } 
             {
-
-            }
-            if (choice == "DEAL")
-            {
-                Console.WriteLine($"Congratulations you win {offer}. You had {playerCase.caseValue} inside your case");
-                if (offer < playerCase.caseValue)
+                Console.Clear();
+                Display(cases);
+                if (choice == "DEAL")
                 {
-                    Console.WriteLine("Oh well better luck next time");
+                    Console.WriteLine($"Congratulations you win {offer}. You had {cases[playerCaseNumber].caseValue} inside your case");
+                    
+                }
+                if (turns == 24)
+                {
+                    for (int i = 0; i < cases.Length; i++)
+                    {
+                        if (cases[i].opened == false && cases[i].playerCase == false)
+                        {
+                            Console.WriteLine($"Do you want to keep case {playerCaseNumber + 1} or swap for case {cases[i].caseNumber}");
+                            temp = i;
+                        }
+                    }
+                    choice = Console.ReadLine().ToUpper();
+                    if (choice.Contains("KEEP"))
+                    {
+                        Console.WriteLine($"Your case contains {cases[playerCaseNumber].caseValue}");
+                    }
+                    else if(choice.Contains("SWAP"))
+                    {
+                        Console.WriteLine($"Case {temp} contains {cases[temp].caseValue}");
+                    }
+
                 }
             }
-            if (turns == 26)
+
+            Console.WriteLine("Would you like to play again?");
+            choice =Console.ReadLine().ToUpper();
+            if(choice == "NO")
             {
-                Console.WriteLine($"Your case has {playerCase}");
+                Console.WriteLine("Bye!");
+                Environment.Exit(0);
             }
-            Console.ReadKey();
 
 
 
@@ -443,10 +468,6 @@ namespace DealorNoDeal
                 Cases key = sortedCases[i];
                 int j = i - 1;
 
-                // Move elements of arr[0..i-1], 
-                // that are greater than key,  
-                // to one position ahead of 
-                // their current position 
                 while (j >= 0 && sortedCases[j].caseValue > key.caseValue)
                 {
                     sortedCases[j + 1] = sortedCases[j];
@@ -485,7 +506,7 @@ namespace DealorNoDeal
             for (int i = 0; i < cases.Length; i++)
             {
                 
-                if (cases[i].opened == false)
+                if (cases[i].opened == false && cases[i].playerCase == false)
                 {
                     Console.Write($"{cases[i].caseNumber}  ");
                     
