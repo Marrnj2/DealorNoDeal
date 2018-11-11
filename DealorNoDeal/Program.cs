@@ -25,6 +25,7 @@ namespace DealorNoDeal
             public string lastName;
             public string interest;
         }
+        // Contains important case information
         public struct Cases
         {
             public bool playerCase;
@@ -88,8 +89,9 @@ namespace DealorNoDeal
                         break;
 
                     case 5:
-
+                        Console.WriteLine("Bye!");
                         break;
+                    
                     default:
                         Console.WriteLine("Invalid Input");
                         break;
@@ -127,7 +129,7 @@ namespace DealorNoDeal
                 }
             }
 
-            // Prints out finalist information with formating
+            // Prints finalists to console with name/interest headers 
             Console.Write("First Name".PadRight(20));
             Console.Write("Last Name".PadRight(20));
             Console.Write("Interest".PadRight(20));
@@ -139,6 +141,8 @@ namespace DealorNoDeal
                 Console.Write(contestant[i].lastName.PadRight(20));
                 Console.Write(contestant[i].interest.PadRight(20));
             }
+
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Press any key to return to the main menu");
@@ -157,32 +161,35 @@ namespace DealorNoDeal
 
             Console.WriteLine("Who would you like to update?");
             input = Console.ReadLine();
-
-            for (int i = 0; i < contestant.Length; i++)
+            if (input != "" || input != " ")
             {
-                if (input == contestant[i].firstName)
+
+                for (int i = 0; i < contestant.Length; i++)
                 {
-                    Console.WriteLine($"You are updateing {contestant[i].firstName} {contestant[i].lastName}s interest feild");
-                    Console.WriteLine();
-                    Console.Write($"Their current interest is set to {contestant[i].interest}. What would you like to change it to?");
-                    input = Console.ReadLine();
-                    contestant[i].interest = input;
+                    if (input == contestant[i].firstName)
+                    {
+                        Console.WriteLine($"You are updateing {contestant[i].firstName} {contestant[i].lastName}s interest feild");
+                        Console.WriteLine();
+                        Console.Write($"Their current interest is set to {contestant[i].interest}. What would you like to change it to?");
+                        input = Console.ReadLine();
+                        contestant[i].interest = input;
+                    }
                 }
-            }
 
-            // Writes updated interest information back onto the deal or no deal text
-            for (int i = 0; i < contestant.Length; i++)
-            {
-                sw.WriteLine(contestant[i].firstName);
-                sw.WriteLine(contestant[i].lastName);
-                sw.WriteLine(contestant[i].interest);
+                // Writes updated interest information back onto the deal or no deal text
+                for (int i = 0; i < contestant.Length; i++)
+                {
+                    sw.WriteLine(contestant[i].firstName);
+                    sw.WriteLine(contestant[i].lastName);
+                    sw.WriteLine(contestant[i].interest);
+                }
+                sw.Close();
+                Console.WriteLine("Feild has been updated");
+                Console.WriteLine();
+                Console.WriteLine("Press any key to return to the main menu");
+                Console.ReadKey();
+                Console.Clear();
             }
-            sw.Close();
-            Console.WriteLine("Feild has been updated");
-            Console.WriteLine();
-            Console.WriteLine("Press any key to return to the main menu");
-            Console.ReadKey();
-            Console.Clear();
 
         }
 
@@ -302,9 +309,7 @@ namespace DealorNoDeal
 
                 }
             }
-            sum = sum / entrys;
-            sum = sum * turns;
-            sum = sum / 10;
+            sum = sum / entrys * turns / 10;
             return sum;
 
         }
@@ -341,18 +346,17 @@ namespace DealorNoDeal
             Console.WriteLine("Press Enter to start");
             Console.ReadKey();
             Console.Clear();
-            Console.WriteLine("Pick your case!");
+            Console.WriteLine("Pick a case from 1,26!");
             pick = Convert.ToInt32(Console.ReadLine());
             pick--;
             cases[pick].playerCase = true;
             playerCaseNumber = pick;
 
-            while (turns < 24)
+            while (turns < 24 && choice != "DEAL")
             {
                 Console.Clear();
                 Display(cases);
                 Console.WriteLine("Now pick a case to open");
-                Console.WriteLine(turns);
 
                 pick = Convert.ToInt32(Console.ReadLine());
                 pick--;
@@ -370,12 +374,14 @@ namespace DealorNoDeal
 
                 Display(cases);
                 Console.WriteLine($"Case {pick + 1} had ${cases[pick].caseValue} inside!");
-                
+                Console.ReadKey();
                 cases[pick].opened = true;
                 turns++;
                 counter++;
                 if (counter == call)
                 {
+                    Console.Clear();
+                    Display(cases);
                     offer = OfferMaker(cases, turns);
                     Console.WriteLine($"The banker is offering you ${offer}. Deal or No Deal?");
                     choice = Console.ReadLine().ToUpper();
@@ -435,32 +441,32 @@ namespace DealorNoDeal
             string[] money = new string[26];
             Cases[] sortedCases = new Cases[26];
             Array.Copy(cases, sortedCases,26);
-            money[0] = "1";
-            money[1] = "2";
-            money[2] = "5";
-            money[3] = "10";
-            money[4] = "20";
-            money[5] = "50";
-            money[6] = "100";
-            money[7] = "150";
-            money[8] = "200";
-            money[9] = "250";
-            money[10] = "300";
-            money[11] = "500";
-            money[12] = "750";
-            money[13] = "1000";
-            money[14] = "2000";
-            money[15] = "3000";
-            money[16] = "4000";
-            money[17] = "5000";
-            money[18] = "15000";
-            money[19] = "20000";
-            money[20] = "30000";
-            money[21] = "50000";
-            money[22] = "75000";
-            money[23] = "100000";
-            money[24] = "200000";
-            money[25] = "1000000";
+            money[0] = "$1";
+            money[1] = "$2";
+            money[2] = "$5";
+            money[3] = "$10";
+            money[4] = "$20";
+            money[5] = "$50";
+            money[6] = "$100";
+            money[7] = "$150";
+            money[8] = "$200";
+            money[9] = "$250";
+            money[10] = "$300";
+            money[11] = "$500";
+            money[12] = "$750";
+            money[13] = "$1000";
+            money[14] = "$2000";
+            money[15] = "$3000";
+            money[16] = "$4000";
+            money[17] = "$5000";
+            money[18] = "$15000";
+            money[19] = "$20000";
+            money[20] = "$30000";
+            money[21] = "$50000";
+            money[22] = "$75000";
+            money[23] = "$100000";
+            money[24] = "$200000";
+            money[25] = "$1000000";
 
             int n = sortedCases.Length;
             for (int i = 1; i < n; ++i)
@@ -487,7 +493,7 @@ namespace DealorNoDeal
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
                 Console.Write(money[count] + "\t\t");
-                if (sortedCases[count + (money.Length / 2) - 1].opened == true)
+                if (sortedCases[count + (money.Length / 2)].opened == true)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
@@ -496,7 +502,7 @@ namespace DealorNoDeal
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
                 
-                Console.Write(money[count + (money.Length / 2) -1]+"\n");
+                Console.Write(money[count + (money.Length / 2)]+"\n");
                 count++;
                 Console.ForegroundColor = ConsoleColor.White;
             }
@@ -508,7 +514,8 @@ namespace DealorNoDeal
                 
                 if (cases[i].opened == false && cases[i].playerCase == false)
                 {
-                    Console.Write($"{cases[i].caseNumber}  ");
+                    
+                    Console.Write($@"{cases[i].caseNumber}  ");
                     
                     
                 }
