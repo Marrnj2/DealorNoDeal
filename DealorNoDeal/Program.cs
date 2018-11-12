@@ -40,9 +40,16 @@ namespace DealorNoDeal
             int input = 0;
             PlayerInfo[] contestant = new PlayerInfo[21];
             Finalists[] finalist = new Finalists[10];
+            string aLine;
             //----------------------
 
             // Main menu switch case
+            StreamReader sr = new StreamReader(@"Title.txt");
+            for(int i = 0; i < 7; i++)
+            {
+                aLine = sr.ReadLine();
+                Console.WriteLine(aLine);
+            }
             while (input != 5)
             {
                 Console.Write("1".PadRight(10));
@@ -94,6 +101,8 @@ namespace DealorNoDeal
                     
                     default:
                         Console.WriteLine("Invalid Input");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                 }
             }
@@ -104,10 +113,16 @@ namespace DealorNoDeal
         {
             // Variable declarations 
             PlayerInfo temp;
-            StreamReader sr = new StreamReader(@"DealOrNoDeal.txt");
+            string aline = " ";
             //----------------------
-
+            StreamReader sr = new StreamReader(@"PlayerList.txt");
+            for(int i = 0; i < 7;i++)
+            {
+                aline = sr.ReadLine();
+                Console.WriteLine(aline);
+            }
             // Reads Deal or No Deal text file for student information and assigns them to a variable
+            sr = new StreamReader(@"DealOrNoDeal.txt");
             for (int i = 0; i < contestant.Length; i++)
             {
                 contestant[i].firstName = sr.ReadLine();
@@ -203,9 +218,10 @@ namespace DealorNoDeal
                 Console.WriteLine();
                 Console.WriteLine("Press any key to return to the main menu");
                 Console.ReadKey();
-                Console.Clear();
+               
             }
-            
+            Console.Clear();
+
         }
 
         // Method for creating the finalist array
@@ -215,12 +231,17 @@ namespace DealorNoDeal
             int[] numList = new int[10];
             int arraySize = 21;
             NumGen(ref numList, arraySize);
+            string aLine = " ";
             //----------------------
 
 
             // Displays finalist information 
-            Console.WriteLine("Your finalists are!");
-            Console.WriteLine();
+            StreamReader sr = new StreamReader(@"Finalist.txt");
+            for (int i = 0; i < 7; i++)
+            {
+                aLine = sr.ReadLine();
+                Console.WriteLine(aLine);
+            }
             for (int i = 0; i < finalist.Length; i++)
             {
                 finalist[i].firstName = contestant[numList[i]].firstName;
@@ -336,7 +357,7 @@ namespace DealorNoDeal
             Cases[] cases = new Cases[26];
             int[] moneyPosition = new int[26];
             int num;
-            int pick;
+            int pick = 0;
             int playerCaseNumber;
             int call = 6;
             int counter = 0;
@@ -344,6 +365,7 @@ namespace DealorNoDeal
             string choice = " ";
             int offer = 0;
             int temp = 0;
+            bool test = false;
             //----------------------
 
             CaseSort(cases, moneyPosition);
@@ -359,6 +381,26 @@ namespace DealorNoDeal
             Console.Clear();
             Console.WriteLine("Pick a case from 1,26!");
             pick = Convert.ToInt32(Console.ReadLine());
+            //choice = Console.ReadLine();
+            //char[] array = choice.ToCharArray();
+            //foreach(Char c in choice)
+            //{
+            //    if (!char.IsNumber(array[array.Length]))
+            //    {
+            //        test = false;
+                    
+            //    }
+            //    while (test == false)
+            //    {
+            //        Console.WriteLine("Invalid Input please select a case");
+            //        choice = Console.ReadLine();
+            //        array = choice.ToCharArray();
+            //    }
+            //    choice = array.ToString();
+            //    pick = Convert.ToInt32(choice);
+            //}
+
+           
             pick--;
             cases[pick].playerCase = true;
             playerCaseNumber = pick;
@@ -367,7 +409,7 @@ namespace DealorNoDeal
             while (turns < 24 && choice != "DEAL")
             {
                 Console.Clear();
-                Display(cases);
+                Display(cases,playerCaseNumber);
                 Console.WriteLine("Now pick a case to open");
 
                 pick = Convert.ToInt32(Console.ReadLine());
@@ -387,7 +429,7 @@ namespace DealorNoDeal
 
 
                 Console.Clear();
-                Display(cases);
+                Display(cases,playerCaseNumber);
 
                 // Displays chosen case value and increases count towards the bankers call
                 Console.WriteLine($"Case {pick + 1} had ${cases[pick].caseValue} inside!");
@@ -400,7 +442,7 @@ namespace DealorNoDeal
                 if (counter == call)
                 {
                     Console.Clear();
-                    Display(cases);
+                    Display(cases,playerCaseNumber);
                     offer = OfferMaker(cases, turns);
                     Console.WriteLine($"The banker is offering you ${offer}. Deal or No Deal?");
                     choice = Console.ReadLine().ToUpper();
@@ -416,7 +458,7 @@ namespace DealorNoDeal
             } 
             {
                 Console.Clear();
-                Display(cases);
+                Display(cases,playerCaseNumber);
 
                 // End game condition for accecpting the bankers deal
                 if (choice == "DEAL")
@@ -466,7 +508,7 @@ namespace DealorNoDeal
         }
 
         // Method for creating the games display
-        public static void Display(Cases[] cases)
+        public static void Display(Cases[] cases, int playerCaseNumber)
         {
             // Variable declaration
             int count = 0;
@@ -541,7 +583,6 @@ namespace DealorNoDeal
                 count++;
                 Console.ForegroundColor = ConsoleColor.White;
             }
-
             Console.WriteLine("Avalible cases");
             Console.WriteLine();
 
@@ -558,6 +599,9 @@ namespace DealorNoDeal
                     
                 }
             }
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Your case {playerCaseNumber + 1}");
             Console.WriteLine();
 
         }
