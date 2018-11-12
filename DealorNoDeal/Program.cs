@@ -18,14 +18,14 @@ namespace DealorNoDeal
             public string interest;
         }
 
-        // Contains imported information for finalists info
+        // Struct for finalists info
         public struct Finalists
         {
             public string firstName;
             public string lastName;
             public string interest;
         }
-        // Contains important case information
+        // Struct for important case information
         public struct Cases
         {
             public bool playerCase;
@@ -154,29 +154,43 @@ namespace DealorNoDeal
         // Method for updateing player interest feilds
         public static void FeildUpdate(PlayerInfo[] contestant)
         {
+
             // Variable declarations 
             string input;
-            StreamWriter sw = new StreamWriter(@"DealOrNoDeal.txt");
+            bool found = false;
+            int pos = 0;
+            
             //----------------------
 
+            // Allows the user to select a player and update their interest feild
             Console.WriteLine("Who would you like to update?");
             input = Console.ReadLine();
-            if (input != "" || input != " ")
-            {
 
-                for (int i = 0; i < contestant.Length; i++)
+            for (int i = 0; i < contestant.Length; i++)
                 {
-                    if (input == contestant[i].firstName)
-                    {
-                        Console.WriteLine($"You are updateing {contestant[i].firstName} {contestant[i].lastName}s interest feild");
-                        Console.WriteLine();
-                        Console.Write($"Their current interest is set to {contestant[i].interest}. What would you like to change it to?");
-                        input = Console.ReadLine();
-                        contestant[i].interest = input;
-                    }
-                }
 
-                // Writes updated interest information back onto the deal or no deal text
+                if (input == contestant[i].firstName)
+                {
+                    
+                    found = true;
+                    pos = i;
+                }
+                
+            }
+            if (found == false)
+            {
+                Console.WriteLine("Could not find contestatnt please try agin");
+                Console.ReadKey();
+            }
+
+            else if (found == true)
+            {
+                StreamWriter sw = new StreamWriter(@"DealOrNoDeal.txt");
+                Console.WriteLine($"You are updateing {contestant[pos].firstName} {contestant[pos].lastName}s interest feild");
+                Console.WriteLine();
+                Console.Write($"Their current interest is set to {contestant[pos].interest}. What would you like to change it to?");
+                input = Console.ReadLine();
+                contestant[pos].interest = input;
                 for (int i = 0; i < contestant.Length; i++)
                 {
                     sw.WriteLine(contestant[i].firstName);
@@ -184,13 +198,14 @@ namespace DealorNoDeal
                     sw.WriteLine(contestant[i].interest);
                 }
                 sw.Close();
+
                 Console.WriteLine("Feild has been updated");
                 Console.WriteLine();
                 Console.WriteLine("Press any key to return to the main menu");
                 Console.ReadKey();
                 Console.Clear();
             }
-
+            
         }
 
         // Method for creating the finalist array
@@ -321,8 +336,6 @@ namespace DealorNoDeal
             Cases[] cases = new Cases[26];
             int[] moneyPosition = new int[26];
             int num;
-            //----------------------
-            //Temp
             int pick;
             int playerCaseNumber;
             int call = 6;
@@ -331,11 +344,9 @@ namespace DealorNoDeal
             string choice = " ";
             int offer = 0;
             int temp = 0;
-            string swap = " ";
             //----------------------
+
             CaseSort(cases, moneyPosition);
-
-
             num = rand.Next(0, 10);
             Console.WriteLine("The player tonight is!");
             Console.WriteLine();
@@ -352,6 +363,7 @@ namespace DealorNoDeal
             cases[pick].playerCase = true;
             playerCaseNumber = pick;
 
+            // Loops case picking input
             while (turns < 24 && choice != "DEAL")
             {
                 Console.Clear();
@@ -360,6 +372,8 @@ namespace DealorNoDeal
 
                 pick = Convert.ToInt32(Console.ReadLine());
                 pick--;
+
+                // Checks user input to make sure that it is a unique input each time 
                 if (cases[pick].opened == true || cases[pick].playerCase == true)
                 {
                     
@@ -370,14 +384,19 @@ namespace DealorNoDeal
                         pick--;
                     }
                 }
-                Console.Clear();
 
+
+                Console.Clear();
                 Display(cases);
+
+                // Displays chosen case value and increases count towards the bankers call
                 Console.WriteLine($"Case {pick + 1} had ${cases[pick].caseValue} inside!");
                 Console.ReadKey();
                 cases[pick].opened = true;
                 turns++;
                 counter++;
+
+                // Checks to see weather or not the banker is ready to be called or not
                 if (counter == call)
                 {
                     Console.Clear();
@@ -386,6 +405,8 @@ namespace DealorNoDeal
                     Console.WriteLine($"The banker is offering you ${offer}. Deal or No Deal?");
                     choice = Console.ReadLine().ToUpper();
                     counter = 0;
+
+                    // Decreases the amount of turns that need to happen before a bank offer
                     if (call > 2)
                     {
                         call--;
@@ -396,11 +417,16 @@ namespace DealorNoDeal
             {
                 Console.Clear();
                 Display(cases);
+
+                // End game condition for accecpting the bankers deal
                 if (choice == "DEAL")
                 {
                     Console.WriteLine($"Congratulations you win {offer}. You had {cases[playerCaseNumber].caseValue} inside your case");
                     
                 }
+
+
+                // Checks to see if the player finished by picking all the avaliable cases 
                 if (turns == 24)
                 {
                     for (int i = 0; i < cases.Length; i++)
@@ -411,6 +437,8 @@ namespace DealorNoDeal
                             temp = i;
                         }
                     }
+
+                    // Checks to see if player wants to keep their case or swap it for the remaining case
                     choice = Console.ReadLine().ToUpper();
                     if (choice.Contains("KEEP"))
                     {
@@ -424,6 +452,7 @@ namespace DealorNoDeal
                 }
             }
 
+            // Provides an exit for the game
             Console.WriteLine("Would you like to play again?");
             choice =Console.ReadLine().ToUpper();
             if(choice == "NO")
@@ -435,12 +464,17 @@ namespace DealorNoDeal
 
 
         }
+
+        // Method for creating the games display
         public static void Display(Cases[] cases)
         {
+            // Variable declaration
             int count = 0;
-            string[] money = new string[26];
             Cases[] sortedCases = new Cases[26];
             Array.Copy(cases, sortedCases,26);
+            int n = sortedCases.Length;
+
+            string[] money = new string[26];
             money[0] = "$1";
             money[1] = "$2";
             money[2] = "$5";
@@ -468,7 +502,7 @@ namespace DealorNoDeal
             money[24] = "$200000";
             money[25] = "$1000000";
 
-            int n = sortedCases.Length;
+           
             for (int i = 1; i < n; ++i)
             {
                 Cases key = sortedCases[i];
@@ -482,6 +516,7 @@ namespace DealorNoDeal
                 sortedCases[j + 1] = key;
             }
 
+            // Provides the game money board with its color and updates it if the number is picked 
             while (count < money.Length / 2)
             {
                 if (sortedCases[count].opened == true)
@@ -509,6 +544,9 @@ namespace DealorNoDeal
 
             Console.WriteLine("Avalible cases");
             Console.WriteLine();
+
+
+            // Displays all currently avalible cases to the player 
             for (int i = 0; i < cases.Length; i++)
             {
                 
