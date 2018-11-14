@@ -199,7 +199,7 @@ namespace DealorNoDeal
             
             // Searches the contestant array to see if input matches any entrys
             for (int i = 0; i < contestant.Length; i++)
-                {
+            {     
                 // If a matching entry there found is set to true 
                 if (input == contestant[i].firstName || input == contestant[i].lastName)
                 {
@@ -207,17 +207,29 @@ namespace DealorNoDeal
                     found = true;
                     pos = i;
                 }
+                
             }
 
-            // Alerts the user there input could not be found
-            if (found == false)
+            // Loops an input untill a matching play is found
+            while (found == false)
             {
                 Console.WriteLine("Could not find contestatnt please try agin");
-                Console.ReadKey();
-            }
+                Console.WriteLine("Who would you like to update?");
+                input = Console.ReadLine();
+                Console.Clear();
+                for (int i = 0; i < contestant.Length; i++)
+                {
+                    if (input == contestant[i].firstName || input == contestant[i].lastName)
+                    {
 
+                        found = true;
+                        pos = i;
+                    }
+
+                }
+            }
             // If found is trye allows the user to update the interest feild
-            else if (found == true)
+            if (found == true)
             {
                 // Opens the text file for editiing 
                 StreamWriter sw = new StreamWriter(@"DealOrNoDeal.txt");
@@ -400,7 +412,7 @@ namespace DealorNoDeal
             int pick = 0;
             int playerCaseNumber;
             int call = 6;
-            int counter = 0;
+            int counter = 6;
             int turns = 0;
             string choice = " ";
             int offer = 0;
@@ -439,7 +451,7 @@ namespace DealorNoDeal
             {
                 Console.Clear();
                 // Calls the display methods and passes the cases array and player case number
-                Display(cases,playerCaseNumber);
+                Display(cases,playerCaseNumber,counter);
                 Console.WriteLine("Now pick a case to open");
 
                 // Asks the user for an input
@@ -463,20 +475,24 @@ namespace DealorNoDeal
 
 
                 Console.Clear();
-                Display(cases,playerCaseNumber);
+                Display(cases,playerCaseNumber,counter);
 
                 // Displays chosen case value and increases count towards the bankers call
                 Console.WriteLine($"Case {pick + 1} had ${cases[pick].caseValue} inside!");
                 Console.ReadKey();
                 cases[pick].opened = true;
                 turns++;
-                counter++;
+                counter--;
 
                 // Checks to see weather or not the banker is ready to be called or not
-                if (counter == call)
+                if (counter == 0)
                 {
                     Console.Clear();
-                    Display(cases,playerCaseNumber);
+
+                    // Updates the display by calling the Display method and providing updated values
+                    Display(cases,playerCaseNumber, counter);
+
+                    // 
                     offer = OfferMaker(cases, turns);
                     Console.WriteLine($"The banker is offering you ${offer}. Deal or No Deal?");
                     choice = Console.ReadLine().ToUpper();
@@ -486,13 +502,14 @@ namespace DealorNoDeal
                     if (call > 2)
                     {
                         call--;
+                        counter = call;
                     }
                     
                 }
             } 
             {
                 Console.Clear();
-                Display(cases,playerCaseNumber);
+                Display(cases,playerCaseNumber, counter);
 
                 // End game condition for accecpting the bankers deal
                 if (choice == "DEAL")
@@ -542,7 +559,7 @@ namespace DealorNoDeal
         }
 
         // Method for creating the games display
-        public static void Display(Cases[] cases, int playerCaseNumber)
+        public static void Display(Cases[] cases, int playerCaseNumber , int counter)
         {
             // Variable declaration
             int count = 0;
@@ -592,7 +609,7 @@ namespace DealorNoDeal
                 sortedCases[j + 1] = key;
             }
 
-            // Provides the game money board with its color and updates it if the number is picked 
+            // Provides the game money board with its color and updates it if the opened value is set to true
             while (count < money.Length / 2)
             {
                 if (sortedCases[count].opened == true)
@@ -627,7 +644,6 @@ namespace DealorNoDeal
                 
                 if (cases[i].opened == false && cases[i].playerCase == false)
                 {
-                    
                     Console.Write($@"{cases[i].caseNumber}  ");
                     
                     
@@ -635,6 +651,7 @@ namespace DealorNoDeal
             }
             Console.WriteLine();
             Console.WriteLine();
+            Console.WriteLine($"Turns untill next offer {counter}");
             Console.WriteLine($"Your case {playerCaseNumber + 1}");
             Console.WriteLine();
 
@@ -654,7 +671,6 @@ namespace DealorNoDeal
                 input = Console.ReadLine();
                 success = Int32.TryParse(input, out temp);
             }
-
             return temp;
         }
     }
