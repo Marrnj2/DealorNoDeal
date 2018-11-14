@@ -37,21 +37,27 @@ namespace DealorNoDeal
         static void Main(string[] args)
         {
             // Variable declarations 
-            int input = 0;
+            string input;
+            int menu = 0;
             PlayerInfo[] contestant = new PlayerInfo[21];
             Finalists[] finalist = new Finalists[10];
             string aLine;
             //----------------------
 
             // Main menu switch case
-            StreamReader sr = new StreamReader(@"Title.txt");
-            for(int i = 0; i < 7; i++)
+            
+            while (menu != 5)
             {
-                aLine = sr.ReadLine();
-                Console.WriteLine(aLine);
-            }
-            while (input != 5)
-            {
+                // Reads a ascii art from a text file
+                StreamReader sr = new StreamReader(@"Title.txt");
+                for (int i = 0; i < 7; i++)
+                {
+                    aLine = sr.ReadLine();
+                    Console.WriteLine(aLine);
+                }
+
+
+                // Formating for the menu switch case
                 Console.Write("1".PadRight(10));
                 Console.Write("Load Player List".PadRight(10));
                 Console.WriteLine();
@@ -72,8 +78,13 @@ namespace DealorNoDeal
                 Console.Write("Exit".PadRight(10));
                 Console.WriteLine();
                 Console.WriteLine();
-                input = Convert.ToInt32(Console.ReadLine());
-                switch (input)
+
+                // Reads an input and sends it to the input checking method
+                input = Console.ReadLine();
+                menu = InputTest(input);
+
+                // Switch case menu for navigating around the programm
+                switch (menu)
                 {
                     case 1:
                         Console.Clear();
@@ -114,13 +125,18 @@ namespace DealorNoDeal
             // Variable declarations 
             PlayerInfo temp;
             string aline = " ";
-            //----------------------
+            
+            Console.Clear();
+
+            // Reads another ascii title from a text file and displays it
             StreamReader sr = new StreamReader(@"PlayerList.txt");
             for(int i = 0; i < 7;i++)
             {
                 aline = sr.ReadLine();
                 Console.WriteLine(aline);
             }
+
+
             // Reads Deal or No Deal text file for student information and assigns them to a variable
             sr = new StreamReader(@"DealOrNoDeal.txt");
             for (int i = 0; i < contestant.Length; i++)
@@ -177,41 +193,55 @@ namespace DealorNoDeal
             
             //----------------------
 
-            // Allows the user to select a player and update their interest feild
+            // Accepts an input
             Console.WriteLine("Who would you like to update?");
             input = Console.ReadLine();
-
+            
+            // Searches the contestant array to see if input matches any entrys
             for (int i = 0; i < contestant.Length; i++)
                 {
-
-                if (input == contestant[i].firstName)
+                // If a matching entry there found is set to true 
+                if (input == contestant[i].firstName || input == contestant[i].lastName)
                 {
                     
                     found = true;
                     pos = i;
                 }
-                
             }
+
+            // Alerts the user there input could not be found
             if (found == false)
             {
                 Console.WriteLine("Could not find contestatnt please try agin");
                 Console.ReadKey();
             }
 
+            // If found is trye allows the user to update the interest feild
             else if (found == true)
             {
+                // Opens the text file for editiing 
                 StreamWriter sw = new StreamWriter(@"DealOrNoDeal.txt");
+
+                // Reminds the user what they are updating
                 Console.WriteLine($"You are updateing {contestant[pos].firstName} {contestant[pos].lastName}s interest feild");
                 Console.WriteLine();
                 Console.Write($"Their current interest is set to {contestant[pos].interest}. What would you like to change it to?");
+
+                // Accepts input
                 input = Console.ReadLine();
+
+                // Rewrites the interest feild with a new interest
                 contestant[pos].interest = input;
+
+                // Rewrites updated information back to the text file
                 for (int i = 0; i < contestant.Length; i++)
                 {
                     sw.WriteLine(contestant[i].firstName);
                     sw.WriteLine(contestant[i].lastName);
                     sw.WriteLine(contestant[i].interest);
                 }
+
+                //Closes the text file
                 sw.Close();
 
                 Console.WriteLine("Feild has been updated");
@@ -232,16 +262,17 @@ namespace DealorNoDeal
             int arraySize = 21;
             NumGen(ref numList, arraySize);
             string aLine = " ";
-            //----------------------
 
 
-            // Displays finalist information 
+            // Reads another ascii title from a text folder
             StreamReader sr = new StreamReader(@"Finalist.txt");
             for (int i = 0; i < 7; i++)
             {
                 aLine = sr.ReadLine();
                 Console.WriteLine(aLine);
             }
+
+            // A loop for displaying all the finalists
             for (int i = 0; i < finalist.Length; i++)
             {
                 finalist[i].firstName = contestant[numList[i]].firstName;
@@ -258,30 +289,37 @@ namespace DealorNoDeal
             Console.Clear();
         }
 
-        // Method for creating array of non duplicate random numbers 
+        // Method for creating array of non duplicate random numbers it recives improtant variables passed from other methods
         public static void NumGen(ref int[] numList, int arraySize)
         {
             // Variable declarations 
             Random rand = new Random();
             int num;
-            //----------------------
+
+            // This creates an array of unique random numbers
+            
 
             for (int i = 0; i < numList.Length; i++)
             {
+                // Creates a random number 
                 num = rand.Next(0, arraySize);
+
+                // Allows j to be used for postitioning while checking the array
                 for (int j = 0; j < i; j++)
                 {
+                    // If the generated number is a duplicate create another number and recheck accroos the whole array untill it is unique
                     while (num == numList[j])
                     {
                         num = rand.Next(0, arraySize);
                         j = 0;
                     }
                 }
+                // Assigns the created numbers to a position in the numlist array
                 numList[i] = num; }
         }
 
         // Method for providing cases with money values 
-        public static void CaseSort(Cases[] cases, int[] moneyPosition)
+        public static void CaseSort(Cases[] cases)
         {
             // Variable declarations 
             int[] money = new int[26];
@@ -290,7 +328,7 @@ namespace DealorNoDeal
             int caseNum = 1;
             //----------------------
 
-            // Calls NumGen array for array of random numbers
+            // Calls NumGen array for array of random numbers and passes the array size and numlist variables
             NumGen(ref numList, arraySize);
 
             // Money value array
@@ -335,9 +373,10 @@ namespace DealorNoDeal
         {
             int sum = 0;
             int entrys = 0;
-
+            // Runs through the cases array
             for (int i = 0; i < cases.Length; i++)
             {
+                // Checks to see if a case has been opened if it is unoppend it can be added to the sum
                 if (cases[i].opened == false)
                 {
                     sum += cases[i].caseValue;
@@ -345,6 +384,7 @@ namespace DealorNoDeal
 
                 }
             }
+            // The formula for creating the bank offer
             sum = sum / entrys * turns / 10;
             return sum;
 
@@ -355,7 +395,7 @@ namespace DealorNoDeal
             // Variable declarations 
             Random rand = new Random();
             Cases[] cases = new Cases[26];
-            int[] moneyPosition = new int[26];
+            //int[] moneyPosition = new int[26];
             int num;
             int pick = 0;
             int playerCaseNumber;
@@ -365,13 +405,17 @@ namespace DealorNoDeal
             string choice = " ";
             int offer = 0;
             int temp = 0;
-            bool test = false;
-            //----------------------
+            string input;
 
-            CaseSort(cases, moneyPosition);
+            // Calls the case sorting method and passes the cases array
+            CaseSort(cases);
+
+            // Generates a random number to be used to select the player
             num = rand.Next(0, 10);
             Console.WriteLine("The player tonight is!");
             Console.WriteLine();
+
+            // Displays the players name and what they like
             Console.Write(finalist[num].firstName.PadRight(15));
             Console.Write(finalist[num].lastName.PadRight(15));
             Console.Write(finalist[num].interest.PadRight(15));
@@ -379,40 +423,29 @@ namespace DealorNoDeal
             Console.WriteLine("Press Enter to start");
             Console.ReadKey();
             Console.Clear();
-            Console.WriteLine("Pick a case from 1,26!");
-            pick = Convert.ToInt32(Console.ReadLine());
-            //choice = Console.ReadLine();
-            //char[] array = choice.ToCharArray();
-            //foreach(Char c in choice)
-            //{
-            //    if (!char.IsNumber(array[array.Length]))
-            //    {
-            //        test = false;
-                    
-            //    }
-            //    while (test == false)
-            //    {
-            //        Console.WriteLine("Invalid Input please select a case");
-            //        choice = Console.ReadLine();
-            //        array = choice.ToCharArray();
-            //    }
-            //    choice = array.ToString();
-            //    pick = Convert.ToInt32(choice);
-            //}
 
-           
+            // Asks the user to pick their case by inputing a number
+            Console.WriteLine("Pick a case from 1,26!");
+            input = Console.ReadLine();
+            // passes the input to a checking method to see it is the correct data type
+            pick = InputTest(input);
             pick--;
+            // Sets the player case value in the cases struct to true
             cases[pick].playerCase = true;
             playerCaseNumber = pick;
 
-            // Loops case picking input
+            // Loops case picking input while under set amount of rounds or untill deal is accepted
             while (turns < 24 && choice != "DEAL")
             {
                 Console.Clear();
+                // Calls the display methods and passes the cases array and player case number
                 Display(cases,playerCaseNumber);
                 Console.WriteLine("Now pick a case to open");
 
-                pick = Convert.ToInt32(Console.ReadLine());
+                // Asks the user for an input
+                input = Console.ReadLine();
+                // Calls the input testing method and passes the input variable
+                pick = InputTest(input);
                 pick--;
 
                 // Checks user input to make sure that it is a unique input each time 
@@ -422,7 +455,8 @@ namespace DealorNoDeal
                     while (cases[pick].opened == true || cases[pick].playerCase == true)
                     {
                         Console.WriteLine("You already picked this case try another one!");
-                        pick = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        pick = InputTest(input);
                         pick--;
                     }
                 }
@@ -604,6 +638,24 @@ namespace DealorNoDeal
             Console.WriteLine($"Your case {playerCaseNumber + 1}");
             Console.WriteLine();
 
+        }
+
+        // Accpepts a passed input and checks to see if it is the correct data type
+        public static int InputTest(string input)
+        {
+            int temp;
+            // Attempts to convert a string to an int
+            bool success = Int32.TryParse(input, out temp);
+
+            // While the input cannot be converted alert the user that their input is an invalid input
+            while(success == false || temp < 0 || temp > 26)
+            {
+                Console.WriteLine("Invalid input please use avalible numbers");
+                input = Console.ReadLine();
+                success = Int32.TryParse(input, out temp);
+            }
+
+            return temp;
         }
     }
 }
